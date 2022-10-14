@@ -1,5 +1,6 @@
 import Post from "../models/Post.model.js";
 import multer from "multer";
+import Plan from "../models/Plan.model.js";
 
 const diskStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -15,28 +16,40 @@ export const createPost = async (req, res) => {
   let userId = req.params.userId;
   let names = [];
   try {
-    let files = req.files;
-    for (let file of files.slice(0, 5)) {
-      names.push(file.filename);
+    //check subscription plan
+    let plan = await Plan.findOne({ userId, status: "active" });
+    if (plan.availablePosts === 0) {
+      plan.status = "inActive";
+      await plan.save();
     }
-    let newPost = new Post({
-      userId,
-      images: names,
-      location: req.body.location,
-      features: req.body.features,
-      price: req.body.price,
-      bedrooms: req.body.bedrooms,
-      bathrooms: req.body.bathrooms,
-      category: req.body.category,
-      parkings: req.body.parkings,
-      longitude: req.body.longitude,
-      latitude: req.body.latitude,
-    });
-    await newPost.save();
-    return res.status(200).send({
-      success: true,
-      Message: "Your post has been processed to the admin",
-    });
+    if (plan && plan.status === "active") {
+      //decrement number of posts by 1
+      plan.availablePosts -= 1;
+      //save the plan
+      await plan.save();
+      let files = req.files;
+      for (let file of files.slice(0, 5)) {
+        names.push(file.filename);
+      }
+      let newPost = new Post({
+        userId,
+        images: names,
+        location: req.body.location,
+        features: req.body.features,
+        price: req.body.price,
+        bedrooms: req.body.bedrooms,
+        bathrooms: req.body.bathrooms,
+        category: req.body.category,
+        parkings: req.body.parkings,
+        longitude: req.body.longitude,
+        latitude: req.body.latitude,
+      });
+      await newPost.save();
+      return res.status(200).send({
+        success: true,
+        Message: "Your post has been processed to the admin",
+      });
+    }
   } catch (err) {
     return res.status(200).send({ success: fale, message: err.message });
   }
