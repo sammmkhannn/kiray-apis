@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 
 const postSchema = new mongoose.Schema({
+  name: {
+    type: String,
+  },
   images: {
     type: Array,
   },
@@ -32,6 +35,25 @@ const postSchema = new mongoose.Schema({
   },
   longitude: {
     type: Number,
+  },
+  wifi: {
+    type: Boolean,
+    default: false,
+  },
+  gym: {
+    type: Boolean,
+    default: false,
+  },
+  petHouse: {
+    type: Boolean,
+    default: false,
+  },
+  spa: {
+    type: Boolean,
+    default: false,
+  },
+  description: {
+    type: String,
   },
 });
 
