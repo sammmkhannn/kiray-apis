@@ -1,6 +1,7 @@
 import express from "express";
 import { config } from "dotenv";
 import postRoutes from "./routes/post.routes.js";
+import userRoutes from "./routes/user.routes.js";
 import cors from "cors";
 config();
 const app = express();
@@ -11,6 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //route config
 app.use("/posts", postRoutes);
+app.use("/users", userRoutes);
 app.listen(PORT, () => {
   console.log("connected to the database");
 });
