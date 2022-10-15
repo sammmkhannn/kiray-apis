@@ -7,15 +7,15 @@ export const subscribe = async (req, res) => {
     let plan = new Plan({
       userId,
       planType: req.body.fullName,
-      price: req.body.price,
-      freePosts: req.body.freePosts,
-      availablePosts: req.body.freePosts,
+      price: 0,
+      freePosts: 2,
+      availablePosts:2,
       validity: req.body.validity,
-      issueDate: req.body.issueDate,
       status: "active",
     });
+    
     await plan.save();
-    return res.status(200).send;
+    return res.status(200).send({success:true,Message:"subscribed!"});
   } catch (err) {
     return res.status(500).send({ success: false, Message: err.message });
   }
@@ -31,11 +31,10 @@ export const subscriptionHistory = async (req, res) => {
         .send({ success: true, Message: "No subscritions found!" });
     }
     let modifiedSusbscritions = subscriptions.map((sub) => {
-      let payload = sub;
-      payload.expiry = sub.issueDate.setDate(
-        new Date(sub.issueDate).getDate() + 30
-      );
-      return payload;
+      
+       let expiry = new Date((new Date(sub.issueDate).setDate((new Date(sub.issueDate)).getDate() + 30)));
+      let { _id, price, freePosts, availablePosts, validity, issueDate, status } = sub;
+      return { _id, price, freePosts, availablePosts, validity, issueDate, status, expiry };
     });
     return res
       .status(200)

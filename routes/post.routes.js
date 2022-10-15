@@ -7,7 +7,7 @@ import {
 import express from "express";
 const router = express.Router();
 
-router.post("/create", upload.any(), createPost);
+router.post("/create/:userId", upload.any(), createPost);
 router.get("/all", getAllPosts);
 router.get("/all-user-posts", getUserPosts);
 
