@@ -25,4 +25,4 @@ const planSchema = new mongoose.Schema({
   },
 });
 
-export default planSchema("Plan", planSchema);
+export default mongoose.model("Plan", planSchema);
