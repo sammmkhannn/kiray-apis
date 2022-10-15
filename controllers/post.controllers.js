@@ -10,6 +10,7 @@ const diskStorage = multer.diskStorage({
     cb(null, new Date().getTime() + file.originalname);
   },
 });
+
 export const upload = multer({ storage: diskStorage });
 
 export const createPost = async (req, res) => {
@@ -18,7 +19,7 @@ export const createPost = async (req, res) => {
   try {
     //check subscription plan
     let plan = await Plan.findOne({ userId, status: "active" });
-    if (plan.availablePosts === 0) {
+    if (plan && plan.availablePosts === 0) {
       plan.status = "inActive";
       await plan.save();
     }
@@ -43,6 +44,12 @@ export const createPost = async (req, res) => {
         parkings: req.body.parkings,
         longitude: req.body.longitude,
         latitude: req.body.latitude,
+        wifi: req.body.wifi,
+        gym: req.body.gym,
+        petHouse: req.body.petHouse,
+        spa: req.body.spa,
+        description: req.body.description,
+        name:req.body.name
       });
       await newPost.save();
       return res.status(200).send({
@@ -51,7 +58,7 @@ export const createPost = async (req, res) => {
       });
     }
   } catch (err) {
-    return res.status(200).send({ success: fale, message: err.message });
+    return res.status(200).send({ success: false, message: err.message });
   }
 };
 
