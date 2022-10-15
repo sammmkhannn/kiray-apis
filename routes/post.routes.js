@@ -2,9 +2,9 @@ import {
   createPost,
   getAllPosts,
   getUserPosts,
+  upload,
 } from "../controllers/post.controllers.js";
 import express from "express";
-import { upload } from "../controllers/post.controllers";
 const router = express.Router();
 
 router.post("/create", upload.any(), createPost);
