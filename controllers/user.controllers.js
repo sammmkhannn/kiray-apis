@@ -20,7 +20,8 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    let user = User.findOne({ cell: req.body.cell });
+    let user = await  User.findOne({ cell: req.body.cell });
+   
     if (!user) {
       return res.status(404).send({ success: true, Message: 'User Not Found!' });
     } else {
@@ -30,10 +31,10 @@ export const login = async (req, res) => {
         userId: user._id,
       });
       await newToken.save();
-      return res.status(200).send({ success: true, Message:"Signed In", token: accessToken });
+      return res.status(200).send({ success: true, Message:"Signed In", token: accessToken, user:{_id:user._id,fullName:user.fullName,profile:`${process.env.BASE_URL}/images/${user.profile}`,cell:user.cell}});
     }
   } catch (err) {
-    return res.status(200).send({ success:false,Message:err.message})
+    return res.status(500).send({ success:false,Message:err.message})
   }
 }
 
