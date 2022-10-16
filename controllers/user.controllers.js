@@ -1,6 +1,7 @@
 import User from "../models/User.model.js";
-
-export const createUser = async (req, res) => {
+import jwt from "jsonwebtoken";
+import Token from "../models/Token.model.js";
+export const register = async (req, res) => {
   try {
     let profile = req.file.filename;
     let user = new User({
@@ -16,3 +17,32 @@ export const createUser = async (req, res) => {
     return res.status(500).send({ success: false, Message: err.message });
   }
 };
+
+export const login = async (req, res) => {
+  try {
+    let user = User.findOne({ cell: req.body.cell });
+    if (!user) {
+      return res.status(404).send({ success: true, Message: 'User Not Found!' });
+    } else {
+      let accessToken = jwt.sign({ userId: user._id, cell: user.cell }, process.env.ACCESS_TOKEN_SECRET);
+      let newToken = new Token({
+        token: accessToken,
+        userId: user._id,
+      });
+      await newToken.save();
+      return res.status(200).send({ success: true, Message:"Signed In", token: accessToken });
+    }
+  } catch (err) {
+    return res.status(200).send({ success:false,Message:err.message})
+  }
+}
+
+export const logout = async(req, res) => {
+  let userId = req.param.userId;
+  try {
+    await Token.deleteOne({ userId });
+    return res.status(200).send({ success: true, Message: "Logged out!" });
+  } catch (err) {
+    return res.status(500).send({ success: true, Message: err.message });
+  }
+}
