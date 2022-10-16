@@ -67,7 +67,7 @@ export const getAllPosts = async (req, res) => {
     let posts = await Post.find({});
     posts = posts.map((post) => {
       post.images = post.images.map((image) => {
-        return process.env.BASE_URI + image;
+        return `${process.env.BASE_URL}/images/${image}`;
       });
       return post;
     });
