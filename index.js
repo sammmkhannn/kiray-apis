@@ -13,7 +13,8 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(express.static("public"));
+app.use("/images", express.static("images"));
 //route config
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
