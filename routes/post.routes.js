@@ -9,6 +9,6 @@ const router = express.Router();
 
 router.post("/create/:userId", upload.any(), createPost);
 router.get("/all", getAllPosts);
-router.get("/all-user-posts", getUserPosts);
+router.get("/all-user-posts/:userId", getUserPosts);
 
 export default router;
