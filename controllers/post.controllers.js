@@ -1,6 +1,6 @@
 import Post from "../models/Post.model.js";
 import multer from "multer";
-import Plan from "../models/Plan.model.js";
+import Subscription from "../models/Subscription.model.js";
 
 const diskStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -18,16 +18,16 @@ export const createPost = async (req, res) => {
   let names = [];
   try {
     //check subscription plan
-    let plan = await Plan.findOne({ userId, status: "active" });
-    if (plan && plan.availablePosts === 0) {
-      plan.status = "inActive";
-      await plan.save();
+    let subscription = await Subscription.findOne({ userId, status: "active" });
+    if (subscription && subscription.availablePosts === 0) {
+      subscription.status = "inActive";
+      await subscription.save();
     }
-    if (plan && plan.status === "active") {
+    if (subscription && subscription.status === "active") {
       //decrement number of posts by 1
-      plan.availablePosts -= 1;
+      subscription.availablePosts -= 1;
       //save the plan
-      await plan.save();
+      await subscription.save();
       let files = req.files;
       for (let file of files.slice(0, 5)) {
         names.push(file.filename);
