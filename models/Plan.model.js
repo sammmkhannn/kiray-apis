@@ -10,18 +10,8 @@ const planSchema = new mongoose.Schema({
   freePosts: {
     type: Number,
   },
-  availablePosts: {
-    type: Number,
-  },
   validity: {
     type: Number,
-  },
-  issueDate: {
-    type: Date,
-    default: Date.now(),
-  },
-  status: {
-    type: String,
   },
 });
 
