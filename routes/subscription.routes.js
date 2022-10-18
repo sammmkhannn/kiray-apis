@@ -1,7 +1,7 @@
 import {
   subscribe,
   subscriptionHistory,
-} from "../controllers/plan.controllers.js";
+} from "../controllers/subscription.controllers.js";
 import express from "express";
 const router = express.Router();
 
