@@ -59,6 +59,14 @@ const postSchema = new mongoose.Schema({
   description: {
     type: String,
   },
+  approved: {
+    type: Boolean,
+    default: false
+  },
+  canceled: {
+    type: Boolean,
+    default:false,
+  }
 });
 
 export default mongoose.model("Post", postSchema);
