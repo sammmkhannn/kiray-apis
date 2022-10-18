@@ -18,7 +18,8 @@ app.use("/images", express.static("images"));
 //route config
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
-app.use('/plans',planRoutes)
+app.use('/plans', planRoutes);
+app.use('/requests', requestRoutes);
 connect(`${process.env.DB_URI}`);
 app.listen(PORT, () => {
   console.log("server is listening on port",PORT);
