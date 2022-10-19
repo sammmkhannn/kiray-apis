@@ -4,6 +4,7 @@ import postRoutes from "./routes/post.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import planRoutes from "./routes/plan.routes.js";
 import requestRoutes from "./routes/request.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 import cors from "cors";
 import connect from "./config/db.js";
 
@@ -15,12 +16,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use("/images", express.static("images"));
+
 //route config
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
-app.use('/plans', planRoutes);
-app.use('/requests', requestRoutes);
+app.use("/plans", planRoutes);
+app.use("/requests", requestRoutes);
+app.use("/admin", adminRoutes);
 connect(`${process.env.DB_URI}`);
 app.listen(PORT, () => {
-  console.log("server is listening on port",PORT);
+  console.log("server is listening on port", PORT);
 });
