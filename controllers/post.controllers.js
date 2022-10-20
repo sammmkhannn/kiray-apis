@@ -40,7 +40,8 @@ export const createPost = async (req, res) => {
         price: req.body.price,
         bedrooms: req.body.bedrooms,
         bathrooms: req.body.bathrooms,
-        category: req.body.category,
+        mainCategory: req.body.mainCategory,
+        subCategory: req.body.subCategory,
         parkings: req.body.parkings,
         longitude: req.body.longitude,
         latitude: req.body.latitude,
@@ -49,7 +50,7 @@ export const createPost = async (req, res) => {
         petHouse: req.body.petHouse,
         spa: req.body.spa,
         description: req.body.description,
-        name:req.body.name
+        name: req.body.name,
       });
       await newPost.save();
       return res.status(200).send({
