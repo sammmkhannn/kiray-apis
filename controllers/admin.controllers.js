@@ -5,6 +5,7 @@ import Request from "../models/Request.model.js";
 import Token from "../models/Token.model.js";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
+import Plan from "../models/Plan.model.js";
 
 export const register = async (req, res) => {
   try {
@@ -134,17 +135,16 @@ export const logout = async (req, res) => {
   }
 };
 
-export const createPlan = async (req, res) => {
-  try {
-  } catch (err) {}
-};
-
 export const modifyPlan = async (req, res) => {
+  const planId = req.params.planId;
   try {
+    //modify existing plan
   } catch (err) {}
 };
 
 export const getAllSubscriptions = async (req, res) => {
   try {
-  } catch (err) {}
+  } catch (err) {
+    //get all subscriptions
+  }
 };
