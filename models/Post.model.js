@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const postSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Types.ObjectId,
-    ref:'Post'
+    ref: "Post",
   },
   name: {
     type: String,
@@ -27,7 +27,11 @@ const postSchema = new mongoose.Schema({
   bathRooms: {
     type: Number,
   },
-  category: {
+  mainCategory: {
+    type: String,
+    required: true,
+  },
+  subCategory: {
     type: String,
     required: true,
   },
@@ -61,12 +65,12 @@ const postSchema = new mongoose.Schema({
   },
   approved: {
     type: Boolean,
-    default: false
+    default: false,
   },
   canceled: {
     type: Boolean,
-    default:false,
-  }
+    default: false,
+  },
 });
 
 export default mongoose.model("Post", postSchema);
