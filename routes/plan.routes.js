@@ -43,17 +43,6 @@ router.post("/createPlan", (req, res) => {
 
 router.post("/processPayment", (req, res) => {
   try {
-    var product = {
-      name: req.body.productName,
-    };
-
-    var plan = {
-      id: req.body.planId,
-      name: req.body.planName,
-      amount: req.body.planAmount,
-      interval: req.body.planInterval,
-      interval_count: req.body.planIntervalCount,
-    };
 
     createCustomerAndSubscription(req.body)
       .then(() => {
