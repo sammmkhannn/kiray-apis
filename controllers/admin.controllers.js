@@ -24,7 +24,7 @@ export const register = async (req, res) => {
     }
     return res
       .status(400)
-      .send({ success: fale, Message: "Can't be registered!" });
+      .send({ success: false, Message: "Can't be registered!" });
   } catch (err) {
     return res.status(500).send({ success: false, Message: err.message });
   }
@@ -90,6 +90,12 @@ export const getTotalUsersCount = async (req, res) => {
 export const postsApproval = async (req, res) => {
   try {
     let posts = await Post.find({ approved: false });
+    posts = posts.map((post) => {
+      post.images = post.images.map((image) => {
+        return `${process.env.BASE_URL}/images/${image}`;
+      });
+      return post;
+    });
     return res.status(200).send({ success: true, posts });
   } catch (err) {
     return res.status(500).send({ success: false, Message: err.message });
