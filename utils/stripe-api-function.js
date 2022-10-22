@@ -1,7 +1,9 @@
 /* Server Side -- Stripe API calls */
 import Stripe from "stripe";
 import UTILS from "./format-numbers.js";
-const stripe = Stripe(process.env.STRIPE_API_KEY);
+const stripe = Stripe(
+  "sk_test_51JqCB5KP5kGmvDfgbGjP66YmcM1kTpupaEK7NSSa8DvClmKAvTsgjqfdoUke1KkxzhMPyI5EjmFuSDRtQaDOq5ze00AcZgjfBB"
+);
 
 export function getAllProductsAndPlans() {
   return Promise.all([stripe.products.list({}), stripe.plans.list({})]).then(
@@ -16,7 +18,7 @@ export function getAllProductsAndPlans() {
         })
         .map((plan) => {
           /* Format plan price (amount) */
-          amount = UTILS.formatUSD(plan.amount);
+          let amount = UTILS.formatUSD(plan.amount);
           return { ...plan, amount };
         });
 
@@ -35,7 +37,7 @@ export function getAllProductsAndPlans() {
 
 export function createProduct(requestBody) {
   return stripe.products.create({
-    name: requestBody.productName,
+    name: requestBody.name,
     type: "service",
   });
 }
