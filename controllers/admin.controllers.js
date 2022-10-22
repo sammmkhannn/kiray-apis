@@ -7,28 +7,28 @@ import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import Plan from "../models/Plan.model.js";
 
-export const register = async (req, res) => {
-  try {
-    let salt = bcryptjs.genSaltSync(10);
-    let admin = await Admin.findOne();
-    if (!admin) {
-      let admin = new Admin({
-        username: req.body.username,
-        password: bcryptjs.hashSync(req.body.password, salt),
-      });
-      await admin.save();
+// export const register = async (req, res) => {
+//   try {
+//     let salt = bcryptjs.genSaltSync(10);
+//     let admin = await Admin.findOne();
+//     if (!admin) {
+//       let admin = new Admin({
+//         username: req.body.username,
+//         password: bcryptjs.hashSync(req.body.password, salt),
+//       });
+//       await admin.save();
 
-      return res
-        .status(200)
-        .send({ success: true, Message: "registered successfully!" });
-    }
-    return res
-      .status(400)
-      .send({ success: false, Message: "Can't be registered!" });
-  } catch (err) {
-    return res.status(500).send({ success: false, Message: err.message });
-  }
-};
+//       return res
+//         .status(200)
+//         .send({ success: true, Message: "registered successfully!" });
+//     }
+//     return res
+//       .status(400)
+//       .send({ success: false, Message: "Can't be registered!" });
+//   } catch (err) {
+//     return res.status(500).send({ success: false, Message: err.message });
+//   }
+// };
 
 export const login = async (req, res) => {
   try {
@@ -54,7 +54,7 @@ export const login = async (req, res) => {
       userId: admin._id,
     });
     await token.save();
-    return res.status(200).send({ success: true, Message: "Logged In", token });
+    return res.status(200).send({ success: true, Message: "Logged In", token ,admin});
   } catch (err) {
     return res.status(500).send({ success: true, Message: err.message });
   }
