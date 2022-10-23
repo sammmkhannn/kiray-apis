@@ -1,5 +1,4 @@
 import {
-  register,
   login,
   getRegisteredUsers,
   getTotalUsersCount,
