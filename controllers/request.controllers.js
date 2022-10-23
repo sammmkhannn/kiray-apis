@@ -7,6 +7,7 @@ export const createRequest = async (req, res) => {
       userId: userId,
       fullName: req.body.fullName,
       email: req.body.email,
+      phoneNumber:req.body.phoneNumber,
       subject: req.body.subject,
       description: req.body.description,
     });
