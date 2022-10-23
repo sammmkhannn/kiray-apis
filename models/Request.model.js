@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+let date = new Date();
 const requestSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Types.ObjectId,
@@ -23,7 +24,11 @@ const requestSchema = new mongoose.Schema({
   },
   date: {
     type: Date,
-    default: new Date.now(),
+    default: date.toLocaleDateString(),
+  },
+  time: {
+    type: String,
+    default:date.toLocaleTimeString(),
   }
 });
 
