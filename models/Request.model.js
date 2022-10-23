@@ -22,6 +22,9 @@ const requestSchema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     ref: "User",
   },
+  phoneNumber: {
+    type:String,
+  },
   date: {
     type: Date,
     default: date.toLocaleDateString(),
