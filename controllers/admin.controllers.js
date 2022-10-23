@@ -90,13 +90,26 @@ export const getTotalUsersCount = async (req, res) => {
 export const postsApproval = async (req, res) => {
   try {
     let posts = await Post.find({ approved: false });
-    posts = posts.map((post) => {
-      post.images = post.images.map((image) => {
+  // return res.status(200).send(posts[0].images);
+    // posts = posts.map(async(post) => {
+     
+    // return post;
+    // });
+    let modifiedPosts = [];
+    for (let post of posts) {
+      let { location, features,price,bedrooms,mainCategory,parkings,longitude,latitude,wifi,gym,petHouse,spak,description,name,subCategory } = post;
+      let user = await User.findOne({ _id: post.userId });
+      let username = user.fullName;
+      let userpic = `${process.env.BASE_URL}/images/${user.profile}`
+      let userPhone = user.cell;
+      let images = post.images.map((image) => {
         return `${process.env.BASE_URL}/images/${image}`;
       });
-      return post;
-    });
-    return res.status(200).send({ success: true, posts });
+      // return res.status(200).send(user);
+      modifiedPosts.push({username,userpic,images,userPhone,location, features,price,bedrooms,mainCategory,parkings,longitude,latitude,wifi,gym,petHouse,spak,description,name,subCategory });
+    }
+    // let user = await User.findOne({ _id: posts[2].userId });
+    return res.status(200).send({ success: true, modifiedPosts });
   } catch (err) {
     return res.status(500).send({ success: false, Message: err.message });
   }
