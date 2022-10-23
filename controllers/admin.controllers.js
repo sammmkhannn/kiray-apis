@@ -101,10 +101,10 @@ export const postsApproval = async (req, res) => {
       let images = post.images.map((image) => {
         return `${process.env.BASE_URL}/images/${image}`;
       });
-      // return res.status(200).send(user);
+
       modifiedPosts.push({username,userpic,images,userPhone,location, features,price,bedrooms,mainCategory,parkings,longitude,latitude,wifi,gym,petHouse,spak,description,name,subCategory });
     }
-    // let user = await User.findOne({ _id: posts[2].userId });
+  
     return res.status(200).send({ success: true, modifiedPosts });
   } catch (err) {
     return res.status(500).send({ success: false, Message: err.message });
