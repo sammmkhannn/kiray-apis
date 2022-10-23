@@ -21,7 +21,7 @@ const postSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  bedrooms: {
+  bedRooms: {
     type: Number,
   },
   bathRooms: {
