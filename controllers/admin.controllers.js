@@ -90,11 +90,7 @@ export const getTotalUsersCount = async (req, res) => {
 export const postsApproval = async (req, res) => {
   try {
     let posts = await Post.find({ approved: false });
-  // return res.status(200).send(posts[0].images);
-    // posts = posts.map(async(post) => {
-     
-    // return post;
-    // });
+  
     let modifiedPosts = [];
     for (let post of posts) {
       let { location, features,price,bedrooms,mainCategory,parkings,longitude,latitude,wifi,gym,petHouse,spak,description,name,subCategory } = post;
