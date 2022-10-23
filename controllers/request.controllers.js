@@ -10,7 +10,10 @@ export const createRequest = async (req, res) => {
       description: req.body.description,
       userId,
     });
-    await request.save();
+    request.save().then(() => {
+      return res.status(200).send({ success: false, Message: "Request has been sent!" });
+    })
+  
   } catch (err) {
     return res.status(200).send({ success: false, Message: err.message });
   }
