@@ -21,6 +21,10 @@ const requestSchema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     ref: "User",
   },
+  date: {
+    type: Date,
+    default: new Date.now(),
+  }
 });
 
 export default mongoose.model("Request", requestSchema);
