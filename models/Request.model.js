@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const requestSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Types.ObjectId,
+    ref: "User",
+  },
   fullName: {
     type: String,
   },
