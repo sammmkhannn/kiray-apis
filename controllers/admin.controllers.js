@@ -93,7 +93,7 @@ export const postsApproval = async (req, res) => {
   
     let modifiedPosts = [];
     for (let post of posts) {
-      let { location, features,price,bedrooms,mainCategory,parkings,longitude,latitude,wifi,gym,petHouse,spak,description,name,subCategory } = post;
+      let { location, features,price,bedrooms,mainCategory,parkings,longitude,latitude,wifi,gym,petHouse,spak,description,name,subCategory,bathRooms } = post;
       let user = await User.findOne({ _id: post.userId });
       let username = user.fullName;
       let userpic = `${process.env.BASE_URL}/images/${user.profile}`
@@ -102,7 +102,7 @@ export const postsApproval = async (req, res) => {
         return `${process.env.BASE_URL}/images/${image}`;
       });
 
-      modifiedPosts.push({username,userpic,images,userPhone,location, features,price,bedrooms,mainCategory,parkings,longitude,latitude,wifi,gym,petHouse,spak,description,name,subCategory });
+      modifiedPosts.push({username,userpic,images,userPhone,location, features,price,bedrooms,mainCategory,parkings,longitude,latitude,wifi,gym,petHouse,spak,description,name,subCategory,bathRooms });
     }
   
     return res.status(200).send({ success: true, modifiedPosts });
