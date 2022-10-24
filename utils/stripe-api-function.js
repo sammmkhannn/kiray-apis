@@ -53,10 +53,19 @@ export function createPlan(requestBody) {
   });
 }
 
-export function createCustomerAndSubscription(requestBody) {
+export async function createCustomerAndSubscription(requestBody) {
+  // let token = await stripe.tokens.create({
+  //   card: {
+  //     number: "47150036682378",
+  //     exp_month: 8,
+  //     exp_year: 2022,
+  //     cvc: "032",
+  //   },
+  // });
+
   return stripe.customers
     .create({
-      source: requestBody.stripeToken,
+      source: requestBody.token,
       email: requestBody.customerEmail,
     })
     .then((customer) => {
@@ -73,4 +82,8 @@ export function createCustomerAndSubscription(requestBody) {
 
 export function updatePlan(planId, requestBody) {
   return stripe.plans.update(planId, requestBody);
+}
+
+export function getSubscriptions() {
+  return stripe.subscriptions.list({ limit: 3 });
 }
