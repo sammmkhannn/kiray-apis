@@ -26,37 +26,37 @@ export const createPost = async (req, res) => {
     // if (subscription && subscription.status === "active") {
     //   //decrement number of posts by 1
     //   subscription.availablePosts -= 1;
-      //save the plan
-      // await subscription.save();
-      let files = req.files.length > 5 ? req.files.slice(0,5) : req.files;
-      for (let file of files) {
-        names.push(file.filename);
-      }
-      let newPost = new Post({
-        userId,
-        images: names,
-        location: req.body.location,
-        features: req.body.features,
-        price: req.body.price,
-        bedRooms: req.body.bedRooms,
-        bathRooms: req.body.bathRooms,
-        mainCategory: req.body.mainCategory,
-        subCategory: req.body.subCategory,
-        parkings: req.body.parkings,
-        longitude: req.body.longitude,
-        latitude: req.body.latitude,
-        wifi: req.body.wifi,
-        gym: req.body.gym,
-        petHouse: req.body.petHouse,
-        spa: req.body.spa,
-        description: req.body.description,
-        name: req.body.name,
-      });
-      await newPost.save();
-      return res.status(200).send({
-        success: true,
-        Message: "Your post has been processed to the admin",
-      });
+    //save the plan
+    // await subscription.save();
+    let files = req.files.length > 5 ? req.files.slice(0, 5) : req.files;
+    for (let file of files) {
+      names.push(file.filename);
+    }
+    let newPost = new Post({
+      userId,
+      images: names,
+      location: req.body.location,
+      features: req.body.features,
+      price: req.body.price,
+      bedRooms: req.body.bedRooms,
+      bathRooms: req.body.bathRooms,
+      mainCategory: req.body.mainCategory,
+      subCategory: req.body.subCategory,
+      parkings: req.body.parkings,
+      longitude: req.body.longitude,
+      latitude: req.body.latitude,
+      wifi: req.body.wifi,
+      gym: req.body.gym,
+      petHouse: req.body.petHouse,
+      spa: req.body.spa,
+      description: req.body.description,
+      name: req.body.name,
+    });
+    await newPost.save();
+    return res.status(200).send({
+      success: true,
+      Message: "Your post has been processed to the admin",
+    });
     // }
   } catch (err) {
     return res.status(200).send({ success: false, message: err.message });
@@ -85,5 +85,37 @@ export const getUserPosts = async (req, res) => {
     return res.status(200).send({ success: true, posts });
   } catch (err) {
     return res.status(500).send({ success: false, Message: err.message });
+  }
+};
+
+export const deletePost = async (req, res) => {
+  let postId = req.body.postId;
+  try {
+    await Post.deleteOne({ _id: postId });
+    return res
+      .status(200)
+      .send({ success: true, Message: "post has been deleted!" });
+  } catch (err) {
+    return res.status(500).send({ success: true, Message: err.message });
+  }
+};
+
+export const editPost = async (req, res) => {
+  let postId = req.body.postId;
+  try {
+    let images = [];
+    if (req.files.length > 0) {
+      for (let file of req.files) {
+        images.push(file.filename);
+      }
+    }
+    let payload = req.body;
+    payload.images = images;
+    await Post.findOneAndUpdate({ _id: postId }, payload);
+    return res
+      .status(200)
+      .send({ success: true, Message: "Post has been updated!" });
+  } catch (err) {
+    return res.status(500).send({ success: true, Message: err.message });
   }
 };
