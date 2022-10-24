@@ -96,6 +96,7 @@ export const postsApproval = async (req, res) => {
     let modifiedPosts = [];
     for (let post of posts) {
       let {
+        _id,
         location,
         features,
         price,
@@ -122,6 +123,7 @@ export const postsApproval = async (req, res) => {
       });
 
       modifiedPosts.push({
+        _id,
         username,
         userpic,
         images,
