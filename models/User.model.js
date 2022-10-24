@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema(
     cell: {
       type: String,
     },
+    blocked: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
