@@ -43,7 +43,6 @@ router.post("/createPlan", (req, res) => {
 
 router.post("/processPayment", (req, res) => {
   try {
-
     createCustomerAndSubscription(req.body)
       .then(() => {
         return res
