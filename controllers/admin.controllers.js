@@ -54,7 +54,9 @@ export const login = async (req, res) => {
       userId: admin._id,
     });
     await token.save();
-    return res.status(200).send({ success: true, Message: "Logged In", token ,admin});
+    return res
+      .status(200)
+      .send({ success: true, Message: "Logged In", token, admin });
   } catch (err) {
     return res.status(500).send({ success: true, Message: err.message });
   }
@@ -90,21 +92,59 @@ export const getTotalUsersCount = async (req, res) => {
 export const postsApproval = async (req, res) => {
   try {
     let posts = await Post.find({ approved: false });
-  
+
     let modifiedPosts = [];
     for (let post of posts) {
-      let { location, features,price,bedrooms,mainCategory,parkings,longitude,latitude,wifi,gym,petHouse,spak,description,name,subCategory,bathRooms } = post;
+      let {
+        location,
+        features,
+        price,
+        bedRooms,
+        mainCategory,
+        parkings,
+        longitude,
+        latitude,
+        wifi,
+        gym,
+        petHouse,
+        spak,
+        description,
+        name,
+        subCategory,
+        bathRooms,
+      } = post;
       let user = await User.findOne({ _id: post.userId });
       let username = user.fullName;
-      let userpic = `${process.env.BASE_URL}/images/${user.profile}`
+      let userpic = `${process.env.BASE_URL}/images/${user.profile}`;
       let userPhone = user.cell;
       let images = post.images.map((image) => {
         return `${process.env.BASE_URL}/images/${image}`;
       });
 
-      modifiedPosts.push({username,userpic,images,userPhone,location, features,price,bedrooms,mainCategory,parkings,longitude,latitude,wifi,gym,petHouse,spak,description,name,subCategory,bathRooms });
+      modifiedPosts.push({
+        username,
+        userpic,
+        images,
+        userPhone,
+        location,
+        features,
+        price,
+        bedRooms,
+        mainCategory,
+        parkings,
+        longitude,
+        latitude,
+        wifi,
+        gym,
+        petHouse,
+        spak,
+        description,
+        name,
+        subCategory,
+        bathRooms,
+      });
     }
-  
+
     return res.status(200).send({ success: true, modifiedPosts });
   } catch (err) {
     return res.status(500).send({ success: false, Message: err.message });
