@@ -5,30 +5,6 @@ import Request from "../models/Request.model.js";
 import Token from "../models/Token.model.js";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
-import Plan from "../models/Plan.model.js";
-
-// export const register = async (req, res) => {
-//   try {
-//     let salt = bcryptjs.genSaltSync(10);
-//     let admin = await Admin.findOne();
-//     if (!admin) {
-//       let admin = new Admin({
-//         username: req.body.username,
-//         password: bcryptjs.hashSync(req.body.password, salt),
-//       });
-//       await admin.save();
-
-//       return res
-//         .status(200)
-//         .send({ success: true, Message: "registered successfully!" });
-//     }
-//     return res
-//       .status(400)
-//       .send({ success: false, Message: "Can't be registered!" });
-//   } catch (err) {
-//     return res.status(500).send({ success: false, Message: err.message });
-//   }
-// };
 
 export const login = async (req, res) => {
   try {
@@ -97,6 +73,7 @@ export const postsApproval = async (req, res) => {
     for (let post of posts) {
       let {
         _id,
+        userId,
         location,
         features,
         price,
@@ -124,6 +101,7 @@ export const postsApproval = async (req, res) => {
 
       modifiedPosts.push({
         _id,
+        userId,
         username,
         userpic,
         images,
@@ -189,19 +167,5 @@ export const logout = async (req, res) => {
     return res.status(200).send({ success: true, Message: "Logged out" });
   } catch (err) {
     return res.status(200).send({ success: true, Message: err.message });
-  }
-};
-
-export const modifyPlan = async (req, res) => {
-  const planId = req.params.planId;
-  try {
-    //modify existing plan
-  } catch (err) {}
-};
-
-export const getAllSubscriptions = async (req, res) => {
-  try {
-  } catch (err) {
-    //get all subscriptions
   }
 };
