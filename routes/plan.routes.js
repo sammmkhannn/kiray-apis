@@ -5,6 +5,7 @@ import {
   createPlan,
   createCustomerAndSubscription,
   updatePlan,
+  getSubscriptions,
 } from "../utils/stripe-api-function.js";
 const router = express.Router();
 
@@ -65,6 +66,20 @@ router.put("/updatePlan", (req, res) => {
         return res
           .status(200)
           .send({ success: true, Message: "plan has been updated!", plan });
+      })
+      .catch((err) => {
+        return res.status(400).send({ success: false, Message: err.message });
+      });
+  } catch (err) {
+    return res.status(500).send({ success: false, Message: err.message });
+  }
+});
+
+router.get("/subscriptions", (req, res) => {
+  try {
+    getSubscriptions()
+      .then((subscriptions) => {
+        return res.status(200).send({ success: true, subscriptions });
       })
       .catch((err) => {
         return res.status(400).send({ success: false, Message: err.message });
