@@ -54,18 +54,18 @@ export function createPlan(requestBody) {
 }
 
 export async function createCustomerAndSubscription(requestBody) {
-  // let token = await stripe.tokens.create({
-  //   card: {
-  //     number: "47150036682378",
-  //     exp_month: 8,
-  //     exp_year: 2022,
-  //     cvc: "032",
-  //   },
-  // });
+  let token = await stripe.tokens.create({
+    card: {
+      number: req.body.number,
+      exp_month: req.body.exp_month,
+      exp_year: req.body.exp_year,
+      cvc: req.body.cvc,
+    },
+  });
 
   return stripe.customers
     .create({
-      source: requestBody.token,
+      source: token,
       email: requestBody.customerEmail,
     })
     .then((customer) => {
@@ -85,5 +85,9 @@ export function updatePlan(planId, requestBody) {
 }
 
 export function getSubscriptions() {
-  return stripe.subscriptions.list({ limit: 3 });
+  return stripe.subscriptions.list({});
+}
+
+export function getAllTransactions() {
+  return stripe.balanceTransactions.list({});
 }
