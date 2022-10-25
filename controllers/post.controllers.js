@@ -101,17 +101,19 @@ export const deletePost = async (req, res) => {
 };
 
 export const editPost = async (req, res) => {
-  let postId = req.body.postId;
+  let postId = req.params.postId;
   try {
-    let images = [];
-    if (req.files.length > 0) {
-      for (let file of req.files) {
-        images.push(file.filename);
-      }
-    }
     let payload = req.body;
-    payload.images = images;
-    await Post.findOneAndUpdate({ _id: postId }, payload);
+    let images = [];
+    if (req?.files?.length > 0) {
+      for (let file of req?.files) {
+        images.push(file?.filename);
+      }
+
+      payload.images = images;
+    }
+
+    await Post.updateOne({ _id: postId }, payload);
     return res
       .status(200)
       .send({ success: true, Message: "Post has been updated!" });
