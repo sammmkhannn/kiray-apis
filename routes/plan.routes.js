@@ -6,6 +6,7 @@ import {
   createCustomerAndSubscription,
   updatePlan,
   getSubscriptions,
+  getAllTransactions,
 } from "../utils/stripe-api-function.js";
 const router = express.Router();
 
@@ -83,6 +84,28 @@ router.get("/subscriptions", (req, res) => {
       })
       .catch((err) => {
         return res.status(400).send({ success: false, Message: err.message });
+      });
+  } catch (err) {
+    return res.status(500).send({ success: false, Message: err.message });
+  }
+});
+
+router.get("/admin-income", (req, res) => {
+  try {
+    getAllTransactions()
+      .then((transactions) => {
+        if (transactions.data.length == 0) {
+          return res.status(200).send({ success: true, income: 0 });
+        } else {
+          let transactionAmounts = transactions.data.map(
+            (transaction) => transaction.amount
+          );
+          let income = transactionAmounts.reduce((amount, sum) => sum + amount);
+          return res.status(200).send({ success: true, transactions, income });
+        }
+      })
+      .catch((err) => {
+        return res.status(400).send({ success: true, Message: err.message });
       });
   } catch (err) {
     return res.status(500).send({ success: false, Message: err.message });
