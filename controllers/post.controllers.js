@@ -19,17 +19,6 @@ export const createPost = async (req, res) => {
   let userId = req.params.userId;
   let names = [];
   try {
-    //check subscription plan
-    // let subscription = await Subscription.findOne({ userId, status: "active" });
-    // if (subscription && subscription.availablePosts === 0) {
-    //   subscription.status = "inActive";
-    //   await subscription.save();
-    // }
-    // if (subscription && subscription.status === "active") {
-    //   //decrement number of posts by 1
-    //   subscription.availablePosts -= 1;
-    //save the plan
-    // await subscription.save();
     let files = req.files.length > 5 ? req.files.slice(0, 5) : req.files;
     for (let file of files) {
       names.push(file.filename);
