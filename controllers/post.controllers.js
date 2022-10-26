@@ -1,5 +1,7 @@
 import Post from "../models/Post.model.js";
+import User from "../models/User.model.js";
 import multer from "multer";
+
 import Subscription from "../models/Subscription.model.js";
 
 const diskStorage = multer.diskStorage({
@@ -66,11 +68,59 @@ export const createPost = async (req, res) => {
 export const getAllPosts = async (req, res) => {
   try {
     let posts = await Post.find({});
-    posts = posts.map((post) => {
-      post.images = post.images.map((image) => {
+    let userIds = posts.map((post) => post.userId);
+    let cellNos = [];
+    for (let userId of userIds) {
+      let user = await User.findOne({ _id: userId });
+      cellNos.push(user.cell);
+    }
+
+    posts = posts.map((post, index) => {
+      let {
+        userId,
+        location,
+        features,
+        price,
+        bedRooms,
+        bathRooms,
+        mainCategory,
+        subCategory,
+        parkings,
+        longitude,
+        latitude,
+        wifi,
+        gym,
+        petHouse,
+        spa,
+        description,
+        name,
+      } = post;
+
+      let images = post.images.map((image) => {
         return `${process.env.BASE_URL}/images/${image}`;
       });
-      return post;
+
+      return {
+        userId,
+        location,
+        features,
+        price,
+        bedRooms,
+        bathRooms,
+        mainCategory,
+        subCategory,
+        parkings,
+        longitude,
+        latitude,
+        wifi,
+        gym,
+        petHouse,
+        spa,
+        description,
+        name,
+        images,
+        cell: cellNos[index],
+      };
     });
     return res.status(200).send({ success: true, posts });
   } catch (err) {
