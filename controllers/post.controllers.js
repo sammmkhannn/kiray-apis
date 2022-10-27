@@ -2,8 +2,6 @@ import Post from "../models/Post.model.js";
 import User from "../models/User.model.js";
 import multer from "multer";
 
-import Subscription from "../models/Subscription.model.js";
-
 const diskStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "public/images/");
