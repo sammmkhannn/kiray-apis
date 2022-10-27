@@ -128,7 +128,7 @@ export const getUserPosts = async (req, res) => {
 };
 
 export const deletePost = async (req, res) => {
-  let postId = req.body.postId;
+  let postId = req.params.postId;
   try {
     await Post.deleteOne({ _id: postId });
     return res
