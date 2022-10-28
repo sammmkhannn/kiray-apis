@@ -12,9 +12,29 @@ const router = express.Router();
 
 /* Place all routes here */
 router.get("/", (req, res) => {
+  let freePosts = {
+    "Premium Gold": 50,
+    "Business Pack": 20,
+    "Free Trial": 2,
+  };
+
   try {
     getAllProductsAndPlans().then((products) => {
-      res.status(200).send({ success: true, products: products });
+      let modifiedProducts = products.map((product) => {
+        let plan = {};
+        plan.image = product.images[0];
+        plan.name = product.name;
+        // plan.productId = product.id;
+        plan.planId = product.plans.length > 0 ? product.plans[0].id : null;
+        plan.active = product.plans.length > 0 ? product.plans[0].active : null;
+        plan.amount = product.plans.length > 0 ? product.plans[0].amount : 0;
+        plan.interval =
+          product.plans.length > 0 ? product.plans[0].interval : null;
+        plan.freePosts = freePosts[plan.name];
+        return plan;
+      });
+
+      res.status(200).send({ success: true, products: modifiedProducts });
     });
   } catch (err) {
     return res.status(500).send({ success: false, Message: err.message });
