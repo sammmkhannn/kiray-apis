@@ -26,7 +26,6 @@ export function getAllProductsAndPlans() {
         const filteredPlans = plans.filter((plan) => {
           return plan.product === product.id;
         });
-
         product.plans = filteredPlans;
       });
 
