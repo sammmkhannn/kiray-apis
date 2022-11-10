@@ -15,6 +15,9 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    customerId: {
+      type:String
+    }
   },
   { timestamps: true }
 );
