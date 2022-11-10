@@ -1,13 +1,16 @@
 import express from "express";
 import {
   getAllProductsAndPlans,
-  createProduct,
-  createPlan,
   createCustomerAndSubscription,
   updatePlan,
+  updateProduct,
+  updatePrice,
   getSubscriptions,
   getAllTransactions,
 } from "../utils/stripe-api-function.js";
+import Subscription from "../models/Subscription.model.js";
+import Product from "../models/Product.model.js";
+import { upload } from "../controllers/post.controllers.js";
 const router = express.Router();
 
 /* Place all routes here */
@@ -19,54 +22,83 @@ router.get("/", (req, res) => {
   };
 
   try {
-    getAllProductsAndPlans().then((products) => {
-      let modifiedProducts = products.map((product) => {
-        let plan = {};
-        plan.image = product.images[0];
-        plan.name = product.name;
-        // plan.productId = product.id;
-        plan.planId = product.plans.length > 0 ? product.plans[0].id : null;
-        plan.active = product.plans.length > 0 ? product.plans[0].active : null;
-        plan.amount = product.plans.length > 0 ? product.plans[0].amount : 0;
-        plan.interval =
-          product.plans.length > 0 ? product.plans[0].interval : null;
-        plan.freePosts = freePosts[plan.name];
-        return plan;
-      });
+    getAllProductsAndPlans().then(async (products) => {
+  
+      //modify the products just pick some useful data
+      //check if the products locally exist
+       let LocalProducts = await Product.find({});
+      
+      if (LocalProducts.length == 0) {
+        let modifiedProducts = products.map((product) => {
+          let plan = {};
+          plan.image = product.images[0];
+          plan.name = product.name;
+          plan.productId = product.id;
+          plan.planId = product.plans.length > 0 ? product.plans[0].id : null;
+          plan.active = product.plans.length > 0 ? product.plans[0].active : null;
+          plan.amount = product.plans.length > 0 ? product.plans[0].amount : 0;
+          plan.interval =
+            product.plans.length > 0 ? product.plans[0].interval : null;
+          plan.freePosts = freePosts[plan.name];
+          return plan;
+        });
+        // //create the products locally
+        for (let product of modifiedProducts) {
+          let newProduct = new Product({
+            productId: product.productId,
+            planId: product.planId,
+            image: product.image,
+            name: product.name,
+            amount: product.amount,
+            active:product.active,
+            interval: product.interval,
+            freePosts: product.freePosts
+          });
 
-      res.status(200).send({ success: true, products: modifiedProducts });
+          await newProduct.save();
+        }
+        return res.status(200).send({ success: true, products: modifiedProducts });
+      } 
+      return res.status(200).send({ success: true, products:LocalProducts });
+      
     });
   } catch (err) {
     return res.status(500).send({ success: false, Message: err.message });
   }
 });
 
-router.post("/createProduct", (req, res) => {
-  try {
-    createProduct(req.body).then(() => {
-      return res
-        .status(200)
-        .send({ success: true, Message: "Product created!" });
-    });
-  } catch (err) {
-    return res.status(500).send({ success: false, Message: err.messge });
-  }
-});
 
-router.post("/createPlan", (req, res) => {
-  try {
-    createPlan(req.body).then(() => {
-      res.status(200).send({ success: true, Message: "Created" });
-    });
-  } catch (err) {
-    return res.status(500).send({ success: false, Message: err.message });
-  }
-});
 
-router.post("/processPayment", (req, res) => {
+//TODO:needs to be modified and fixed
+router.post("/processPayment/:userId", async(req, res) => {
+  //create plans object
+  let date = new Date();
+
+  let products = await Product.find({});
+  let plans = {};
+  for (let product of products) {
+    plans[`${product.planId}`] = {
+      name: product.name,
+      freePosts: product.freePosts,
+      interval:product.interval
+    }
+  }
   try {
-    createCustomerAndSubscription(req.body)
-      .then(() => {
+    createCustomerAndSubscription(req)
+      .then(async (subscription) => {
+        //create a local subscription just to communicate the data
+        let newSubscription = await Subscription({
+          userId:req.params.userId,
+          planId:req.body.planId,
+          planName: plans[planId].name,
+          issueDate: date.toLocaleDateString(),
+          expiryDate: new Date((new Date(date.toLocaleDateString()).setDate((new Date(sub.issueDate)).getDate() + plans[planId].interval))),
+          totalPosts: plans[planId].freePosts,
+          availablePosts: plans[planId].freePosts,
+          Active: true,
+        });
+      
+        await newSubscription.save();
         return res
           .status(200)
           .send({ success: true, Message: "Payment Succeed!" });
@@ -79,16 +111,40 @@ router.post("/processPayment", (req, res) => {
   }
 });
 
-router.put("/updatePlan", (req, res) => {
+router.put('/update-price/:planId', (req, res) => {
+  try {
+    updatePrice(req.params.planId, req.body.amount).then((response) => {
+      return res.status(200).send({ success: true, Message: "done",response });
+    })
+  } catch (err) {
+    return res.status(500).send({ success: false, Message: err.message });
+  }
+});
+//TODO: fix the issues
+router.put("/update-plan-and-product/:planId/:productId",upload.single('img'), (req, res) => {
   let planId = req.params.planId;
+  let productId = req.params.productId;
   try {
     updatePlan(planId, req.body)
-      .then((plan) => {
-        return res
-          .status(200)
-          .send({ success: true, Message: "plan has been updated!", plan });
+      .then(async(plan) => {
+        //update the product details if any changes >
+        
+        updateProduct(productId, req.body).then(async(response) => {
+          let query = {};
+        req.file ? query.image = req.file.filename : "";
+        req.body.name ? query.amount = req.body.name : "";
+        req.body.amount ? query.amount = req.body.amount : "";
+        req.body.active ? query.active = req.body.active : "";
+        req.body.interval ? query.interval = req.body.interval : "";
+        req.body.freePosts ? query.freePosts = req.body.freePosts : "";
+        await Product.updateOne({ planId: planId },query);
+          return res.status(200).send({success:true,Message:"Changes have been updated!"});
+        }).catch((err) => {
+          return res.status(400).send({ success: false, Message: "got an error while updating changes" });
+        })
       })
       .catch((err) => {
+        console.log(err);
         return res.status(400).send({ success: false, Message: err.message });
       });
   } catch (err) {
@@ -96,6 +152,7 @@ router.put("/updatePlan", (req, res) => {
   }
 });
 
+//done
 router.get("/subscriptions", (req, res) => {
   try {
     getSubscriptions()
@@ -110,6 +167,8 @@ router.get("/subscriptions", (req, res) => {
   }
 });
 
+
+//done 
 router.get("/admin-income", (req, res) => {
   try {
     getAllTransactions()
