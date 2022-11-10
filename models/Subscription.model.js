@@ -9,6 +9,9 @@ const subscriptionSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "Plan"
     },
+    planName: {
+        type:String,  
+    },
     issueDate: {
         type: Date,
         default:new Date()
@@ -16,11 +19,14 @@ const subscriptionSchema = new mongoose.Schema({
     expiryDate: {
         type: Date,
     },
-    availablePost: {
+    totalPosts: {
+        type:Number,  
+    },
+    availablePosts: {
         type:Number,
     },
-    status: {
-        type:String,
+    active: {
+        type:Boolean,
     }
 }, {
     timestamps: true
