@@ -50,7 +50,15 @@ export const getAllPlans = async (req, res) => {
 export const updatePlan = async (req, res) => {
     let planId = req.params.planId;
     try {
-        await Plan.updateOne({ _id: planId }, req.body);
+        
+        let query = {};
+        req.file ? query.image = req.file.filename : "";
+        req.body.name ? query.name = req.body.name : "";
+        req.body.amount ? query.amount = req.body.amount : "";
+        req.body.interval ? query.interval = req.body.interval : "";
+        req.body.freePosts ? query.freePosts = req.body.freePosts : "";
+        //plans
+        await Plan.updateOne({ _id: planId },query);
         return res.status(200).send({ success: false, Message: 'plan has been updated!' });
     } catch (err) {
         return res.status(500).send({ success: false, Message: err.message });
