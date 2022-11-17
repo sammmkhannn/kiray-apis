@@ -6,6 +6,15 @@ const adminSchema = new mongoose.Schema({
     },
     password: {
         type: String
+    },
+    bankName: {
+        type:String,
+    },
+    accountNumber: {
+        type:String,
+    },
+    phoneNumber: {
+        type:String,
     }
 }, { timestamps: true });
 
