@@ -5,6 +5,8 @@ import userRoutes from "./routes/user.routes.js";
 import planRoutes from "./routes/plan.routes.js";
 import requestRoutes from "./routes/request.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
+import transactionRoutes from "./routes/transaction.routes.js";
+import subscriptionRoutes from "./routes/subscription.routes.js";
 import cors from "cors";
 import connect from "./config/db.js";
 
@@ -23,6 +25,9 @@ app.use("/posts", postRoutes);
 app.use("/plans", planRoutes);
 app.use("/requests", requestRoutes);
 app.use("/admin", adminRoutes);
+app.use("/subscriptions", subscriptionRoutes);
+app.use("/transactions", transactionRoutes);
+
 connect(`${process.env.DB_URI}`);
 app.listen(PORT, () => {
   console.log("server is listening on port", PORT);
