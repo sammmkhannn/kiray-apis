@@ -7,9 +7,9 @@ import {
 import express from "express";
 const router = express.Router();
 
-router.post("/create", createSubscription);
-router.post("/update", updateSubscription);
-router.post("/subscriptions", userSubscriptions);
+router.post("/create/:userId", createSubscription);
+router.put("/update/:subscriptionId", updateSubscription);
+router.get("/all/:userId", userSubscriptions);
 router.get("/history", subscriptionHistory);
 
 export default router;
