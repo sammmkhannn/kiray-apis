@@ -1,20 +1,21 @@
 import mongoose from "mongoose";
 
+let date = new Date();
 const subscriptionSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Types.ObjectId,
         ref: "User"
     },
-    planId: {
+    productId: {
         type: mongoose.Types.ObjectId,
-        ref: "Plan"
+        ref:'Product',
     },
-    planName: {
+    proudctName: {
         type:String,  
     },
     issueDate: {
         type: Date,
-        default:new Date()
+        default:date.toLocaleDateString()
     },
     expiryDate: {
         type: Date,
