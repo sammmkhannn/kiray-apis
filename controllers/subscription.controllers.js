@@ -6,12 +6,6 @@ export const createSubscription = async (req, res) => {
     let subscription = new Subscription({
       userId,
       planId: req.body.planId,
-      proudctName: req.body.proudctName,
-      issueDate: req.body.issueDate,
-      expiryDate: req.body.expiryDate,
-      totalPosts: req.body.totalPosts,
-      availablePosts: req.body.availablePosts,
-      active:false,
     });
     let sub = await subscription.save();
     return res.status(200).send({ success: false, Message: "Subscribed the plan",subscription:sub });
@@ -41,16 +35,16 @@ export const userSubscriptions = async (req, res) => {
     }
     return res
       .status(200)
-      .send({ success: true, history:subscriptions });
+      .send({ success: true, subscriptions });
   } catch (err) {
     return res.status(500).send({ success: false, Message: err.message });
   }
 };
 
-export const subscriptionHisotry = async (req, res) => {
+export const subscriptionHistory = async (req, res) => {
   try {
     let subscriptions = await Subscription.find({});
-    return res.status(200).send({ success: true, subscriptions });
+    return res.status(200).send({ success: true, history:subscriptions });
   } catch (err) {
     return res.status(500).send({ success: false, Message: err.message });
   }
