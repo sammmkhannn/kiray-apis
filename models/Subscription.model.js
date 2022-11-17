@@ -6,25 +6,28 @@ const subscriptionSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "User"
     },
-    productId: {
+    planId: {
         type: mongoose.Types.ObjectId,
         ref:'Product',
     },
-    proudctName: {
+    planName: {
         type:String,  
     },
     issueDate: {
         type: Date,
-        default:date.toLocaleDateString()
+        default:date.toLocaleDateString(),
     },
     expiryDate: {
         type: Date,
+        default:date.toLocaleDateString(),
     },
     totalPosts: {
-        type:Number,  
+        type: Number,
+        default:0,
     },
     availablePosts: {
-        type:Number,
+        type: Number,
+        default:0,
     },
     active: {
         type:Boolean,
