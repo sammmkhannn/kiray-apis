@@ -63,6 +63,9 @@ const postSchema = new mongoose.Schema({
   description: {
     type: String,
   },
+  cell:{
+    type: String,
+  },
   approved: {
     type: Boolean,
     default: false,
