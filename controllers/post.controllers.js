@@ -48,6 +48,7 @@ export const createPost = async (req, res) => {
       petHouse: req.body.petHouse,
       spa: req.body.spa,
       description: req.body.description,
+      cell:req.body.cell,
       name: req.body.name,
     });
     await newPost.save();
