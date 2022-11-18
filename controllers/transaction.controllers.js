@@ -1,6 +1,7 @@
 import Subscription from "../models/Subscription.model.js";
 import Transaction from "../models/Transaction.model.js";
 import Plan from "../models/Plan.model.js";
+import UserModel from "../models/User.model.js";
 
 
 //create transaction
@@ -37,6 +38,26 @@ export const getAllTransactions = async (req, res) => {
             return transaction;
         });
         return res.status(200).send({ success: true, transactions });
+    } catch (err) {
+        return res.status(500).send({ success: false, Message: err.message });
+    }
+}
+
+export const transactionsForApproval = async (req, res) => {
+    try {
+        let transactions = await Transaction.find({ approved: false, canceled: false });
+        let modifiedTransactions = [];
+        // return res.status(200).send({ transactions });
+        for (let transaction of transactions) {
+            //get user
+            let user = await UserModel.findOne({ _id: transaction.userId });
+            //get subscription 
+            let subscription = await Subscription.findOne({ _id: transaction.subscriptionId });
+            //get plan
+            let plan = await Plan.findOne({ _id: subscription.planId });
+            modifiedTransactions.push({ profile: process.env.BASE_URL + user.profile, username: user.fullName, phoneNumber: user.cell, planName: plan.name, price: plan.amount, transactionId: transaction.paymentTransactionId, paymentReciept: transaction.receiptImage });
+        }
+        return res.status(200).send({ success: false, transactions: modifiedTransactions });
     } catch (err) {
         return res.status(500).send({ success: false, Message: err.message });
     }
@@ -79,6 +100,7 @@ export const cancelTransaction = async (req, res) => {
 export const adminIncome = async (req, res) => {
     try {
         let transactions = await Transaction.find({ approved: true });
+
         // return res.status(200).send({ transactions });
         //get subscriptions ids
         // let subscriptions = transactions.map(async(transaction) => {
