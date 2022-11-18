@@ -55,7 +55,7 @@ export const transactionsForApproval = async (req, res) => {
             let subscription = await Subscription.findOne({ _id: transaction.subscriptionId });
             //get plan
             let plan = await Plan.findOne({ _id: subscription.planId });
-            modifiedTransactions.push({ profile: process.env.BASE_URL + user.profile, username: user.fullName, phoneNumber: user.cell, planName: plan.name, price: plan.amount, transactionId: transaction.paymentTransactionId, paymentReciept: transaction.receiptImage });
+            modifiedTransactions.push({ _id:user._id, profile: process.env.BASE_URL + user.profile, username: user.fullName, phoneNumber: user.cell, planName: plan.name, price: plan.amount, transactionId: transaction.paymentTransactionId, paymentReciept: transaction.receiptImage });
         }
         return res.status(200).send({ success: false, transactions: modifiedTransactions });
     } catch (err) {
