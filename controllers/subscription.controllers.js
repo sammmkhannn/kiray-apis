@@ -24,6 +24,7 @@ export const updateSubscription = async (req, res) => {
   }
 }
 
+
 export const userSubscriptions = async (req, res) => {
   let userId = req.params.userId;
   try {
