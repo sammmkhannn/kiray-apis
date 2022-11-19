@@ -5,22 +5,27 @@ import UserModel from "../models/User.model.js";
 
 
 //create transaction
-export const createTransaction = async (req, res) => {
-    let userId = req.params.userId;
+export const createTransaction = async (req, res) => {   
     try {
         if (!req.file) {
             return res.status(400).send({ success: false, Message: 'Kindly provide the transaction receipt as well' });
         }
+        //  return res.status(200).send(req.body);
+        let query = {};
+        // let { subId, paymentId } = req.body;
+        query.userId = req.params.userId;
+        query.subscriptionId = req.body.subscriptionId;
+        query.paymentTransactionId = req.body.paymentTransactionId;
+        // return res.status(200).send({ success: true,query});
         let transaction = new Transaction({
-            userId,
-            subscriptionId:req.body.subscriptionId,
-            paymentTransactionId: req.body.transactionId,
+            ...query,
             username: req.body.username,
             phoneNumber: req.body.phoneNumber,
             receiptImage: req.file.filename,
         });
-        await transaction.save();
-        return res.status(200).send({ success: true, Message: "Transaction has been processed to the admin" });
+
+        let tran = await transaction.save();
+        return res.status(200).send({ success: true, Message: "Transaction has been processed to the admin",transaction:tran });
     } catch (err) {
         return res.status(500).send({ success: true, Message: err.message });
     }
@@ -43,11 +48,12 @@ export const getAllTransactions = async (req, res) => {
     }
 }
 
+
 export const transactionsForApproval = async (req, res) => {
     try {
         let transactions = await Transaction.find({ approved: false, canceled: false });
+        // return res.status(200).send({ success: true, transactions });
         let modifiedTransactions = [];
-        // return res.status(200).send({ transactions });
         for (let transaction of transactions) {
             //get user
             let user = await UserModel.findOne({ _id: transaction.userId });
@@ -65,12 +71,17 @@ export const transactionsForApproval = async (req, res) => {
 
 export const approveTransaction = async (req, res) => {
     let transactionId = req.params.transactionId;
+    
     try {
-
-        let transaction = await Transaction.findOneAndUpdate({ _id: transactionId }, {approved:true});
+        let tr = await Transaction.findOne({ _id: transactionId });
+        // return res.status(200).send({ success: true, transactionId});
+        let transaction = await Transaction.findOneAndUpdate({ _id: transactionId }, { approved: true });
+        // return res.status(200).send(transaction);
         //make the subscription active now
         let subscription = await Subscription.findOne({ _id: transaction.subscriptionId });
         let plan = await Plan.findOne({ _id: subscription.planId });
+        //set Total Posts 
+        subscription.totalPosts = plan.freePosts;
         //set free posts
         subscription.planName = plan.name;
         subscription.freePosts = plan.freePosts;
@@ -78,7 +89,7 @@ export const approveTransaction = async (req, res) => {
         subscription.expiryDate = new Date(new Date(subscription.issueDate).setDate(new Date(subscription.issueDate).getDate() + 30)).toLocaleDateString();
         //set available posts
         subscription.availablePosts = plan.freePosts;
-        subscription.active = true;
+        subscription.status = "active";
         await subscription.save();
         
         return res.status(200).send({ success: true, Message: "approval has been done!" });
