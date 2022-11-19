@@ -18,14 +18,15 @@ export const createPost = async (req, res) => {
   let userId = req.params.userId;
   let names = [];
   try {
-   // let subscription = await Subscription.findOne({ Active: true, availablePosts: { $neq: 0 } });
-   /* if (subscription) {
+    let subscription = await Subscription.findOne({ status: "active" });
+    // return res.status(200).send({ success: true,subscription });
+    if (subscription) {
       subscription.availablePosts -= 1;
       if (subscription.availablePosts == 0) {
-        subscription.active = false;
+        subscription.active = "inactive";
       }
       await subscription.save();
-     */
+     
     let files = req.files.length > 5 ? req.files.slice(0, 5) : req.files;
     for (let file of files) {
       names.push(file.filename);
@@ -56,9 +57,9 @@ export const createPost = async (req, res) => {
       success: true,
       Message: "Your post has been processed to the admin",
     });
-   // } else {
-     // return res.status(400).send({ success: false, Message: "Subscript a plan!" });
-    //}
+   } else {
+     return res.status(400).send({ success: false, Message: "Subscribe a plan!" });
+    }
   } catch (err) {
     return res.status(500).send({ success: false, message: err.message });
   }
@@ -131,7 +132,12 @@ export const getUserPosts = async (req, res) => {
   let userId = req.params.userId;
   try {
     let posts = await Post.find({ userId });
-    return res.status(200).send({ success: true, posts });
+    let subscriptPlan = await Subscription.find({ userId, active: "true" });
+    if (!subscriptPlan) {
+      return res.status(200).send({ success: true, posts, hasSubscription: false, remainingPosts: 0 });
+    }
+
+    return res.status(200).send({ success: true, posts, hasSubscription: true, remainingPosts: subscriptPlan.availablePosts });
   } catch (err) {
     return res.status(500).send({ success: false, Message: err.message });
   }
