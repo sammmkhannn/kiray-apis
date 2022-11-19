@@ -29,8 +29,9 @@ const subscriptionSchema = new mongoose.Schema({
         type: Number,
         default:0,
     },
-    active: {
-        type:Boolean,
+    status: {
+        type: String,
+        default:"pending"
     }
 }, {
     timestamps: true
