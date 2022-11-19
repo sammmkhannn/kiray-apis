@@ -8,7 +8,7 @@ const transactionSchema = new mongoose.Schema({
     },
     subscriptionId: {
         type: mongoose.Types.ObjectId,
-        ref:'Plan'
+        ref:'Subscription'
     },
     paymentTransactionId: {
         type: String,
