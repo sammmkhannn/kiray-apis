@@ -132,7 +132,7 @@ export const getUserPosts = async (req, res) => {
   let userId = req.params.userId;
   try {
     let posts = await Post.find({ userId });
-    let subscriptPlan = await Subscription.find({ userId, active: "true" });
+    let subscriptPlan = await Subscription.findOne({ userId, active: "true" });
     if (!subscriptPlan) {
       return res.status(200).send({ success: true, posts, hasSubscription: false, remainingPosts: 0 });
     }
