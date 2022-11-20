@@ -52,6 +52,7 @@ export const createPost = async (req, res) => {
       cell:req.body.cell,
       name: req.body.name,
     });
+      
     await newPost.save();
     return res.status(200).send({
       success: true,
@@ -134,6 +135,60 @@ export const getUserPosts = async (req, res) => {
   try {
     let posts = await Post.find({ userId });
     // return res.status(200).send({ success: true, userId });
+    let userIds = posts.map((post) => post.userId);
+    let cellNos = [];
+    for (let userId of userIds) {
+      let user = await User.findOne({ _id: userId });
+      cellNos.push(user.cell);
+    }
+
+    posts = posts.map((post, index) => {
+      let {
+        userId,
+        location,
+        features,
+        price,
+        bedRooms,
+        bathRooms,
+        mainCategory,
+        subCategory,
+        parkings,
+        longitude,
+        latitude,
+        wifi,
+        gym,
+        petHouse,
+        spa,
+        description,
+        name,
+      } = post;
+
+      let images = post.images.map((image) => {
+        return `${process.env.BASE_URL}/images/${image}`;
+      });
+
+      return {
+        userId,
+        location,
+        features,
+        price,
+        bedRooms,
+        bathRooms,
+        mainCategory,
+        subCategory,
+        parkings,
+        longitude,
+        latitude,
+        wifi,
+        gym,
+        petHouse,
+        spa,
+        description,
+        name,
+        images,
+        cell: cellNos[index],
+      };
+    });
     let subscriptPlan = await Subscription.findOne({ userId, active: "true" });
     if (!subscriptPlan) {
       return res.status(200).send({ success: true, posts, hasSubscription: false, remainingPosts: 0 });
