@@ -4,7 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "repository": "git@github.com:sammmkhannn/kiray-backend.git",
   "author": "sam <shoaibur206@gmail.com>",
