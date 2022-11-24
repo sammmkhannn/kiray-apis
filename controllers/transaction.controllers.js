@@ -10,13 +10,11 @@ export const createTransaction = async (req, res) => {
         if (!req.file) {
             return res.status(400).send({ success: false, Message: 'Kindly provide the transaction receipt as well' });
         }
-        //  return res.status(200).send(req.body);
+        
         let query = {};
-        // let { subId, paymentId } = req.body;
         query.userId = req.params.userId;
         query.subscriptionId = req.body.subscriptionId;
         query.paymentTransactionId = req.body.paymentTransactionId;
-        // return res.status(200).send({ success: true,query});
         let transaction = new Transaction({
             ...query,
             username: req.body.username,
@@ -57,11 +55,13 @@ export const transactionsForApproval = async (req, res) => {
         for (let transaction of transactions) {
             //get user
             let user = await UserModel.findOne({ _id: transaction.userId });
-            //get subscription 
-            let subscription = await Subscription.findOne({ _id: transaction.subscriptionId });
-            //get plan
-            let plan = await Plan.findOne({ _id: subscription.planId });
-            modifiedTransactions.push({ _id:transaction._id, profile: process.env.BASE_URL + user.profile, username: user.fullName, phoneNumber: user.cell, planName: plan.name, price: plan.amount, transactionId: transaction.paymentTransactionId, paymentReciept: transaction.receiptImage });
+            if (user) {
+                //get subscription 
+                let subscription = await Subscription.findOne({ _id: transaction.subscriptionId });
+                //get plan
+                let plan = await Plan.findOne({ _id: subscription.planId });
+                modifiedTransactions.push({ _id: transaction._id, profile: process.env.BASE_URL + user.profile, username: user.fullName, phoneNumber: user.cell, planName: plan.name, price: plan.amount, transactionId: transaction.paymentTransactionId, paymentReciept: transaction.receiptImage });
+            }
         }
         return res.status(200).send({ success: true, transactions: modifiedTransactions });
     } catch (err) {
@@ -150,6 +150,6 @@ export const adminIncome = async (req, res) => {
         });
         return res.status(200).send({ success: true, allData, income });
     } catch (err) {
-        
+        return res.status(500).send({ success: false, Message: err.message });
     }
 }
