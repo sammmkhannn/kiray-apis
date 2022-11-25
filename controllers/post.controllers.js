@@ -18,8 +18,7 @@ export const createPost = async (req, res) => {
   let userId = req.params.userId;
   let names = [];
   try {
-    let subscription = await Subscription.findOne({ status: "active" });
-    // return res.status(200).send({ success: true,subscription });
+    let subscription = await Subscription.findOne({ status: "active" ,userId});
     if (subscription) {
       subscription.availablePosts -= 1;
       if (subscription.availablePosts == 0) {
