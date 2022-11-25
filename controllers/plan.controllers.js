@@ -1,5 +1,6 @@
 import Plan from "../models/Plan.model.js";
 import Admin from "../models/Admin.model.js";
+import SubscriptionModel from "../models/Subscription.model.js";
 
 //create product
 export const createPlan = async (req, res) => {
@@ -29,6 +30,7 @@ export const createPlan = async (req, res) => {
 
 //get all plans
 export const getAllPlans = async (req, res) => {
+    let userId = req.params.userId;
     try {
         let plans = await Plan.find({});
         plans = plans.map((plan) => {
@@ -37,9 +39,15 @@ export const getAllPlans = async (req, res) => {
         });
         let admin = await Admin.findOne();
         
-        if (plans.length > 0) {
-            return res.status(200).send({ success: true, plans,bankDetails:{bankName:admin.bankName,accountNumber:admin.accountNumber,phoneNumber:admin.phoneNumber} });
+        if (plans.length > 0) { 
+
+            let subscription = await SubscriptionModel.findOne({ $or: [{ status: "active" },{status:"pending"}],userId});
+            if (subscription) {
+                return res.status(200).send({ success: true, hasSubscription: true ,plans, bankDetails: { bankName: admin.bankName, accountNumber: admin.accountNumber, phoneNumber: admin.phoneNumber }});
+            }
+            return res.status(200).send({ success: true, hasSubscription:false, plans, bankDetails: { bankName: admin.bankName, accountNumber: admin.accountNumber, phoneNumber: admin.phoneNumber } });
         }
+       
         return res.status(404).send({ success: false, Message: "Plans Not Found!" });
     } catch (err) {
         return res.status(500).send({ success: false, Message: err.message });
