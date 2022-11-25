@@ -195,7 +195,7 @@ import { upload } from "../controllers/post.controllers.js";
 // });
 
 router.post('/create',upload.single('image'), createPlan);
-router.get('/all', getAllPlans);
+router.get('/all/:userId', getAllPlans);
 router.put('/update/:planId', updatePlan);
 
 export default router;
