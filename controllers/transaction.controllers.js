@@ -146,11 +146,15 @@ export const adminIncome = async (req, res) => {
         let income = amounts.reduce((amount, sum) => {
             return amount + sum;
         });
-        let allData = transactions.map(async(transaction, index) => {
-            let user = await UserModel.findOne({_id:transaction.userId});
-            return { transaction, subscription:subscriptions[index], plan:plans[index],profile:process.env.BASE_URL+user.profile };
-        });
-        // let user = await UserModel.findOne({_id:userId});
+        // let allData = transactions.map(async(transaction, index) => {
+        //     let user = await UserModel.findOne({_id:transaction.userId});
+        //     return { transaction, subscription:subscriptions[index], plan:plans[index],profile:process.env.BASE_URL+user.profile };
+        // });
+        let allData = [];
+        for(let i = 0; i<transactions.length; i++) {
+            let user = await UserModel.findOne({_id:transactions[i].userId});
+            allData.push({ transaction:transactions[i], subscription:subscriptions[i], plan:plans[i],profile:process.env.BASE_URL+user.profile });
+        }
 
         return res.status(200).send({ success: true, allData, income});
     } catch (err) {
