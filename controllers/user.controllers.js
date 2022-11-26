@@ -24,7 +24,7 @@ export const login = async (req, res) => {
     let user = await User.findOne({ cell: req.body.cell });
     let subscription = await SubscriptionModel.findOne({ status: 'active', userId: user._id });
     if (subscription) {
-      if (new Date().getTime() >= new Date(subscription.expiryDate()).getTime()) {
+      if (new Date().getTime() >= new Date(subscription.expiryDate).getTime()) {
         subscription.status('inactive');
         await subscription.save();
       }
