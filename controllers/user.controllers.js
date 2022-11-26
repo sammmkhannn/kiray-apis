@@ -1,6 +1,7 @@
 import User from "../models/User.model.js";
 import jwt from "jsonwebtoken";
 import Token from "../models/Token.model.js";
+import SubscriptionModel from "../models/Subscription.model.js";
 export const register = async (req, res) => {
   try {
     let profile = req.file.filename;
@@ -21,7 +22,13 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     let user = await User.findOne({ cell: req.body.cell });
-
+    let subscription = await SubscriptionModel.findOne({ status: 'active', userId: user._id });
+    if (subscription) {
+      if (new Date().getTime() >= new Date(subscription.expiryDate()).getTime()) {
+        subscription.status('inactive');
+        await subscription.save();
+      }
+    }
     if (!user) {
       return res
         .status(404)
