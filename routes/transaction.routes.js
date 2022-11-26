@@ -9,5 +9,5 @@ router.get("/all", getAllTransactions);
 router.put("/approve/:transactionId", approveTransaction);
 router.put("/cancel/:transactionId", cancelTransaction);
 router.get("/transactions-for-approval", transactionsForApproval);
-router.get("/admin-income", adminIncome);
+router.get("/admin-income/userId", adminIncome);
 export default router;
