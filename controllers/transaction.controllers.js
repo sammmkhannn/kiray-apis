@@ -152,7 +152,7 @@ export const adminIncome = async (req, res) => {
         });
         // let user = await UserModel.findOne({_id:userId});
 
-        return res.status(200).send({ success: true, allData, income,userProfile:user.profile });
+        return res.status(200).send({ success: true, allData, income});
     } catch (err) {
         return res.status(500).send({ success: false, Message: err.message });
     }
