@@ -109,7 +109,7 @@ export const cancelTransaction = async (req, res) => {
 }
 
 export const adminIncome = async (req, res) => {
-    const userId = req.params.userId;
+    // const userId = req.params.userId;
     try {
         let transactions = await Transaction.find({ approved: true });
 
@@ -146,10 +146,11 @@ export const adminIncome = async (req, res) => {
         let income = amounts.reduce((amount, sum) => {
             return amount + sum;
         });
-        let allData = transactions.map((transaction, index) => {
-            return { transaction, subscription:subscriptions[index], plan:plans[index] };
+        let allData = transactions.map(async(transaction, index) => {
+            let user = await UserModel.findOne({_id:transaction.userId});
+            return { transaction, subscription:subscriptions[index], plan:plans[index],profile:process.env.BASE_URL+user.profile };
         });
-        let user = await UserModel.findOne({_id:userId});
+        // let user = await UserModel.findOne({_id:userId});
 
         return res.status(200).send({ success: true, allData, income,userProfile:user.profile });
     } catch (err) {
