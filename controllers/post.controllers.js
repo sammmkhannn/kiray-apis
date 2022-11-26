@@ -22,7 +22,10 @@ export const createPost = async (req, res) => {
     if (subscription) {
       subscription.availablePosts -= 1;
       if (subscription.availablePosts == 0) {
-        subscription.active = "inactive";
+        subscription.status = "inactive";
+      }
+      if (new Date().getTime() >= new Date(subscription.expiryDate).getTime()) {
+        subscription.status('inactive');
       }
       await subscription.save();
      
