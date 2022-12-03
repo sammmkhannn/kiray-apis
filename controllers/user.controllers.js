@@ -4,14 +4,10 @@ import Token from "../models/Token.model.js";
 import SubscriptionModel from "../models/Subscription.model.js";
 export const register = async (req, res) => {
   try {
-    // let profile = "";
-    // if(req.file) {
-    //  profile = req.file.filename;
-    // }
+  
     let user = new User({
       fullName: req.body.fullName,
-      // profile: profile,
-      cell: req.body.cell,
+      cell: req.body.cell
     });
     await user.save();
     return res
