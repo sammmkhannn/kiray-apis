@@ -41,10 +41,10 @@ export const login = async (req, res) => {
 export const getRegisteredUsers = async (req, res) => {
   try {
     let users = await User.find();
-    users = users.map((user) => {
-      user.profile = `${process.env.BASE_URL}/images/${user.profile}`;
-      return user;
-    });
+    // users = users.map((user) => {
+    //   user.profile = `${process.env.BASE_URL}/images/${user.profile}`;
+    //   return user;
+    // });
     if (users.length === 0) {
       return res
         .status(404)
@@ -93,7 +93,7 @@ export const postsApproval = async (req, res) => {
       } = post;
       let user = await User.findOne({ _id: post.userId });
       let username = user.fullName;
-      let userpic = `${process.env.BASE_URL}/images/${user.profile}`;
+      // let userpic = `${process.env.BASE_URL}/images/${user.profile}`;
       let userPhone = user.cell;
       let images = post.images.map((image) => {
         return `${process.env.BASE_URL}/images/${image}`;
@@ -103,7 +103,7 @@ export const postsApproval = async (req, res) => {
         _id,
         userId,
         username,
-        userpic,
+        // userpic,
         images,
         userPhone,
         location,
