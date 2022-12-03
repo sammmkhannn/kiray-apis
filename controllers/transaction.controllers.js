@@ -60,7 +60,7 @@ export const transactionsForApproval = async (req, res) => {
                 let subscription = await Subscription.findOne({ _id: transaction.subscriptionId });
                 //get plan
                 let plan = await Plan.findOne({ _id: subscription.planId });
-                modifiedTransactions.push({ _id: transaction._id, profile: process.env.BASE_URL + user.profile, username: user.fullName, phoneNumber: user.cell, planName: plan.name, price: plan.amount, transactionId: transaction.paymentTransactionId, paymentReciept: transaction.receiptImage });
+                modifiedTransactions.push({ _id: transaction._id, username: user.fullName, phoneNumber: user.cell, planName: plan.name, price: plan.amount, transactionId: transaction.paymentTransactionId, paymentReciept: transaction.receiptImage });
             }
         }
         return res.status(200).send({ success: true, transactions: modifiedTransactions });
@@ -109,16 +109,10 @@ export const cancelTransaction = async (req, res) => {
 }
 
 export const adminIncome = async (req, res) => {
-    // const userId = req.params.userId;
+    
     try {
         let transactions = await Transaction.find({ approved: true });
 
-        // return res.status(200).send({ transactions });
-        //get subscriptions ids
-        // let subscriptions = transactions.map(async(transaction) => {
-        //     let subscription = await Subscription.findOne({ _id: transaction.subscriptionId });
-        //     return subscription;
-        // });
         //get subscriptions
         let subscriptions = [];
         for (let transaction of transactions) {
@@ -153,7 +147,7 @@ export const adminIncome = async (req, res) => {
         let allData = [];
         for(let i = 0; i<transactions.length; i++) {
             let user = await UserModel.findOne({_id:transactions[i].userId});
-            allData.push({ transaction:transactions[i], subscription:subscriptions[i], plan:plans[i],profile:process.env.BASE_URL+user.profile });
+            allData.push({ transaction:transactions[i], subscription:subscriptions[i], plan:plans[i]});
         }
 
         return res.status(200).send({ success: true, allData, income});
