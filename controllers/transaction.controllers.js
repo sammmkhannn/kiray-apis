@@ -136,7 +136,9 @@ export const adminIncome = async (req, res) => {
         //calculate income
         //get the amounts
         let amounts = plans.map((plan) => parseInt(plan.amount));
-
+        if(amounts.length == 0) {
+            return res.status(200).send({success:true, income:0});
+        }
         let income = amounts.reduce((amount, sum) => {
             return amount + sum;
         });
