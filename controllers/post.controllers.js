@@ -80,6 +80,7 @@ export const getAllPosts = async (req, res) => {
 
     posts = posts.map((post, index) => {
       let {
+        _id,
         userId,
         location,
         features,
@@ -104,6 +105,7 @@ export const getAllPosts = async (req, res) => {
       });
 
       return {
+        _id,
         userId,
         location,
         features,
