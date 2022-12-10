@@ -65,9 +65,10 @@ export const updatePlan = async (req, res) => {
         req.body.amount ? query.amount = req.body.amount : "";
         req.body.interval ? query.interval = req.body.interval : "";
         req.body.freePosts ? query.freePosts = req.body.freePosts : "";
-        //plans
+        
+        // return res.status(200).send(req.body);
         await Plan.updateOne({ _id: planId },query);
-        return res.status(200).send({ success: false, Message: 'plan has been updated!' });
+        return res.status(200).send({ success: true, Message: 'plan has been updated!' });
     } catch (err) {
         return res.status(500).send({ success: false, Message: err.message });
     }
