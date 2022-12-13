@@ -129,7 +129,7 @@ export const getAllPosts = async (req, res) => {
     });
     return res.status(200).send({ success: true, posts });
   } catch (err) {
-    return res.status(500).send({ success: fale, Message: err.message });
+    return res.status(500).send({ success: false, Message: err.message });
   }
 };
 
