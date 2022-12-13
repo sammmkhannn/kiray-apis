@@ -75,6 +75,9 @@ export const getAllPosts = async (req, res) => {
     let cellNos = [];
     for (let userId of userIds) {
       let user = await User.findOne({ _id: userId });
+      if(!user) {
+        return res.status(404).send({success:false,Message:`User with this Id: ${userId} is not found`});
+      }
       cellNos.push(user.cell);
     }
 
