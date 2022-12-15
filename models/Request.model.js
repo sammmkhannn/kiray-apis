@@ -18,10 +18,6 @@ const requestSchema = new mongoose.Schema({
   description: {
     type: String,
   },
-  userId: {
-    type: mongoose.Types.ObjectId,
-    ref: "User",
-  },
   phoneNumber: {
     type:String,
   },
