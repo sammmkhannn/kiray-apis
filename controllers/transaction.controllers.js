@@ -61,9 +61,13 @@ export const transactionsForApproval = async (req, res) => {
                 //get plan
                 let plan = await Plan.findOne({ _id: subscription.planId });
                 modifiedTransactions.push({ _id: transaction._id, username: user.fullName, phoneNumber: user.cell, planName: plan.name, price: plan.amount, transactionId: transaction.paymentTransactionId, paymentReciept: transaction.receiptImage });
-            }
+            return res.status(200).send({ success: true, transactions: modifiedTransactions });
+        } else{
+            return res.status(200).send({success:false,Message:"Transactions Not Found!", transactions:modifiedTransactions});
         }
-        return res.status(200).send({ success: true, transactions: modifiedTransactions });
+            
+        }
+        
     } catch (err) {
         return res.status(500).send({ success: false, Message: err.message });
     }
