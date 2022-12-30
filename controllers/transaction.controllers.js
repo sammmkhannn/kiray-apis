@@ -50,7 +50,7 @@ export const getAllTransactions = async (req, res) => {
 export const transactionsForApproval = async (req, res) => {
     try {
         let transactions = await Transaction.find({ approved: false });
-        return res.status(200).send({success:true,Message:"all transactions",transactions});
+        // return res.status(200).send({success:true,Message:"all transactions",transactions});
         // return res.status(200).send({ success: true, transactions });
         let modifiedTransactions = [];
         for (let transaction of transactions) {
