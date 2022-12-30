@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema(
     },
     cell: {
       type: String,
+      unique:true
     },
     blocked: {
       type: Boolean,
