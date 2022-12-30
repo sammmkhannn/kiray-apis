@@ -49,7 +49,7 @@ export const getAllTransactions = async (req, res) => {
 
 export const transactionsForApproval = async (req, res) => {
     try {
-        let transactions = await Transaction.find({ approved: false, canceled: false });
+        let transactions = await Transaction.find({ approved: false });
         // return res.status(200).send({ success: true, transactions });
         let modifiedTransactions = [];
         for (let transaction of transactions) {
@@ -73,8 +73,7 @@ export const approveTransaction = async (req, res) => {
     let transactionId = req.params.transactionId;
     
     try {
-        let tr = await Transaction.findOne({ _id: transactionId });
-        // return res.status(200).send({ success: true, transactionId});
+
         let transaction = await Transaction.findOneAndUpdate({ _id: transactionId }, { approved: true });
         // return res.status(200).send(transaction);
         //make the subscription active now
